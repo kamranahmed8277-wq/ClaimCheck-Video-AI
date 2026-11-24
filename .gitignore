@@ -1,0 +1,47 @@
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+.cache/
+
+# Local databases and private data
+*.db
+*.sqlite3
+backups/
+uploads/
+private_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local debugging and research data
+search_cache.json
+urdu_database_check.txt
+debug_ddgs_retry.py
+debug_ddgs_search.py

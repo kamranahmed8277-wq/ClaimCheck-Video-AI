@@ -1,0 +1,74 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+/* Human Claim Review Navigation */
+.review-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 24px;
+}
+
+/* Previous and Next buttons */
+.review-navigation .review-next,
+.review-navigation .review-previous {
+    min-width: 150px;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Previous Claim - Left side */
+.review-navigation .review-previous {
+    margin-right: auto;
+}
+
+/* Next Claim / Done - Right side */
+.review-navigation .review-next {
+    margin-left: auto;
+}
+
+/* Disabled button */
+.review-navigation button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .review-navigation {
+        gap: 10px;
+    }
+
+    .review-navigation .review-next,
+    .review-navigation .review-previous {
+        min-width: 0;
+        flex: 1;
+        padding: 12px 10px;
+        font-size: 12px;
+    }
+}
