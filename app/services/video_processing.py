@@ -4,16 +4,14 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import imageio_ffmpeg
+
 from app.services.transcription import transcribe_audio
 
 
-FFMPEG_PATH = str(
-    Path.home()
-    / "Downloads"
-    / "ffmpeg-9.0.2-essentials_build"
-    / "ffmpeg-9.0.2-essentials_build"
-    / "bin"
-    / "ffmpeg.exe"
+FFMPEG_PATH = (
+    os.getenv("FFMPEG_PATH")
+    or imageio_ffmpeg.get_ffmpeg_exe()
 )
 
 
