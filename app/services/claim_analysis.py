@@ -266,10 +266,27 @@ AVAILABLE CATEGORIES:
 
 IMPORTANT PRINCIPLES:
 
-1. PRIMARY CATEGORY AND FACT-CHECK REQUIREMENT
+1. PRIMARY CATEGORY
 
-A statement can have an instruction as its primary category while also
-containing an independently checkable factual assertion.
+Choose the primary category based on the actual content of
+the statement.
+
+An explicit, checkable factual assertion takes priority over
+an instruction when both appear in the same statement.
+
+Use these rules:
+
+A. factual_claim:
+The statement communicates at least one factual assertion
+that can be checked against evidence.
+
+This includes factual assertions combined with advice,
+recommendations, commands, or suggested actions.
+
+B. instruction:
+The statement only gives advice, a recommendation,
+a command, or a procedure without communicating
+an explicit factual assertion.
 
 Examples:
 
@@ -282,21 +299,34 @@ category=factual_claim
 requires_fact_check=true
 
 "Drink water because it improves digestion."
-category=instruction
-requires_fact_check=true
-
-"Use this software."
-category=instruction
-requires_fact_check=false
-
-"This software reduces processing time by 40%."
 category=factual_claim
 requires_fact_check=true
 
+"Use this cream because it reduces acne."
+category=factual_claim
+requires_fact_check=true
+
+"Eat more vegetables."
+category=instruction
+requires_fact_check=false
+
 2. FACTUAL ASSERTIONS INSIDE INSTRUCTIONS
 
-Do not overlook factual assertions just because the sentence contains
-commands or recommendations.
+Never classify an entire statement as instruction merely
+because it contains words such as:
+
+- should
+- must
+- eat
+- drink
+- use
+- avoid
+- لازمی
+- چاہیے
+- کھائیں
+- پیئیں
+
+Look for the factual assertion communicated by the speaker.
 
 Example:
 
@@ -304,15 +334,13 @@ Example:
 Stop eating salt."
 
 Expected:
-category=instruction
+category=factual_claim
 requires_fact_check=true
 
-Reason:
-The statement asserts a checkable relationship between puffy eyes
-and excess salt, and then gives an instruction.
+The assertion about excess salt is checkable.
+The recommendation to stop eating salt is an instruction.
 
-Do not invent additional assertions about whether stopping salt
-consumption will cure puffy eyes.
+Do not invent additional treatment benefits.
 
 3. SYMPTOM + CONDITION + RECOMMENDATION
 
@@ -321,24 +349,14 @@ Carefully examine statements following this pattern:
 "If you have symptom X, you have condition Y.
 Do action Z."
 
-The assertion about condition Y is a factual assertion.
-Action Z is an instruction.
-
-If the assertion and instruction are in one sentence, the primary
-category may be instruction, but requires_fact_check must remain true.
-
-Example:
-
-"If white spots appear on your nails, you have zinc deficiency.
-Correct your zinc deficiency."
+The assertion about condition Y is factual.
 
 Expected:
-category=instruction
+category=factual_claim
 requires_fact_check=true
 
-4. RECOMMENDATIONS WITHOUT EXPLICIT BENEFITS
-
-A recommendation is not automatically a factual claim.
+If the statement contains only a recommendation without
+an explicit factual assertion, classify it as instruction.
 
 "Eat more vegetables."
 instruction, false
@@ -361,7 +379,7 @@ factual_claim, true
 factual_claim, true
 
 "Use this cream because it reduces acne."
-instruction, true
+factual_claim, true
 
 5. CONDITIONAL STATEMENTS
 
@@ -419,7 +437,7 @@ category=promotion
 requires_fact_check=false
 
 "Our product reduces energy consumption by 30%."
-category=promotion or factual_claim, depending on its main purpose
+category=factual_claim
 requires_fact_check=true
 
 Do not ignore factual product claims merely because the content
@@ -1846,6 +1864,25 @@ def analyze_segments(
     claims_by_sentence = extract_atomic_claims(
         sentences
     )
+    # ------------------------------------------------------------------
+    # 6. Normalize categories using extracted factual claims.
+    # ------------------------------------------------------------------
+
+    for index, extracted_claims in claims_by_sentence.items():
+
+        # If at least one factual claim was successfully extracted,
+        # the primary category must be factual_claim.
+        if extracted_claims:
+            sentences[index]["category"] = "factual_claim"
+
+            sentences[index]["requires_fact_check"] = True
+
+            logger.info(
+                "Category normalized to factual_claim: sentence_index=%s "
+                "extracted_claims=%s",
+                index,
+                len(extracted_claims),
+            )
 
     # ------------------------------------------------------------------
     # 6. Build API-compatible analyzed results.
