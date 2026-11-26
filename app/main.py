@@ -1,5 +1,6 @@
 import logging
 import uuid
+import os
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone
 from typing import Literal
@@ -143,9 +144,14 @@ app = FastAPI(
     version="0.1.0",
 )
 
+raw_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173")
+allow_origins = [
+    origin.strip() for origin in raw_origins.split(",") if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

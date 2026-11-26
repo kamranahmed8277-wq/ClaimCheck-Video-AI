@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 
 import yt_dlp
 
-from app.services.transcription import transcribe_audio
 from app.services.video_processing import FFMPEG_PATH
 from app.services.gemini_transcription import transcribe_with_gemini
 

@@ -17,6 +17,7 @@ FFMPEG_PATH = (
 
 def extract_audio_and_transcribe(video_path: str) -> dict:
     """Extract audio from a video and transcribe it."""
+    from app.services.transcription import transcribe_audio
 
     if not Path(FFMPEG_PATH).is_file():
         raise RuntimeError("FFmpeg executable was not found.")
